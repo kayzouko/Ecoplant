@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.app.ActivityCompat
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.view.LayoutInflater
 import androidx.core.content.FileProvider
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -71,12 +72,15 @@ class Scan : AppCompatActivity() {
                 it.setMargins(0, 0, 0, 41.dp)
             }
         }
-        //on enlève les exemples statiques
-        //content.removeView(findViewById(R.id.premierExemple))
-        //content.removeView(findViewById(R.id.deuxiemeExemple))
+
         //on insère notre conteneur vide après le titre
         val titleIndex = content.indexOfChild(titleRecents)
         content.addView(recentContainer, titleIndex + 1)
+
+        //chargement des analyses sauvegardées
+        lifecycleScope.launch {
+            loadSavedAnalyses()
+        }
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
             != PackageManager.PERMISSION_GRANTED) {
@@ -102,7 +106,7 @@ class Scan : AppCompatActivity() {
         }
 
         //footer navigation
-        //historiqueBtn.setOnClickListener { startActivity(Intent(this, Historique::class.java)) }
+        historiqueBtn.setOnClickListener { startActivity(Intent(this, Historique::class.java)) }
         //mapBtn.setOnClickListener       { startActivity(Intent(this, Map::class.java)) }
         //profilBtn.setOnClickListener    { startActivity(Intent(this, Profil::class.java)) }
     }
@@ -171,9 +175,12 @@ class Scan : AppCompatActivity() {
         val firstResult = json.getJSONArray("results").getJSONObject(0)
         val species = firstResult.getJSONObject("species")
         val sciName = species.getString("scientificNameWithoutAuthor")
+        val commonNames = species.getJSONArray("commonNames")
+        val frenchName = if (commonNames.length() > 0) commonNames.getString(0) else null
+        val score = firstResult.getDouble("score")
 
         withContext(Dispatchers.Main) {
-            addRecentAnalysis(bitmap, sciName)
+            addRecentAnalysis(bitmap, sciName, frenchName, score)
             Toast.makeText(
                 this@Scan,
                 "Identification réussie : $sciName",
@@ -204,41 +211,34 @@ class Scan : AppCompatActivity() {
     }
 
     //fonction pour créer et ajouter dans Récentes Analyses
-    private fun addRecentAnalysis(photo: Bitmap, speciesName: String) {
-        val thumbnail = Bitmap.createScaledBitmap(photo, 200, 200, true)
+    private fun addRecentAnalysis(photo: Bitmap, speciesName: String, commonName: String?, score: Double) {
+        // Création de la vue
+        val itemView = LayoutInflater.from(this).inflate(R.layout.item_recent_analysis, recentContainer, false)
 
-        val item = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            background = getDrawable(R.drawable.rectangle_blanc)
-            elevation = 4f
-            setPadding(21.dp, 14.dp, 21.dp, 14.dp)
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(31.dp, 0, 31.dp, 25.dp)
-            }
-        }
+        // Configuration des éléments
+        val ivPlant = itemView.findViewById<ImageView>(R.id.ivPlant)
+        val tvScientificName = itemView.findViewById<TextView>(R.id.tvScientificName)
+        val tvCommonName = itemView.findViewById<TextView>(R.id.tvCommonName)
+        val tvScoreValue = itemView.findViewById<TextView>(R.id.tvScoreValue)
 
-        ImageView(this).apply {
-            setImageBitmap(thumbnail)
-            layoutParams = LinearLayout.LayoutParams(80.dp, 80.dp).also {
-                it.marginEnd = 24.dp
-            }
-            scaleType = ImageView.ScaleType.CENTER_CROP
-        }.let { item.addView(it) }
+        // Redimensionnement de la photo
+        val thumbnail = Bitmap.createScaledBitmap(photo, 80.dp, 80.dp, true)
+        ivPlant.setImageBitmap(thumbnail)
 
-        LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-            addView(TextView(this@Scan).apply {
-                text = speciesName
-                textSize = 16f
-                setTextColor(0xFF000000.toInt())
-            })
-        }.let { item.addView(it) }
+        tvScientificName.text = speciesName
+        tvCommonName.text = commonName ?: "Nom commun inconnu"
+        tvScoreValue.text = "%.2f".format(score)
 
-        recentContainer.addView(item, 0)
+        // Ajout en tête de liste
+        recentContainer.addView(itemView, 0)
+
+        // Sauvegarde en base de données
+        saveAnalysisToDb(RecentAnalysis(
+            scientificName = speciesName,
+            commonName = commonName,
+            score = score,
+            imagePath = saveBitmapToStorage(thumbnail) // Implémentez cette méthode
+        ))
     }
 
     //extension pour convertir dp en px
@@ -263,6 +263,42 @@ class Scan : AppCompatActivity() {
             e.printStackTrace()
             return ""
         }
+    }
+
+    private val database by lazy {
+        (application as EcoPlantApplication).database
+    }
+
+    private fun saveAnalysisToDb(analysis: RecentAnalysis) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            database.recentAnalysisDao().insert(analysis)
+        }
+    }
+
+    private suspend fun loadSavedAnalyses() {
+        withContext(Dispatchers.IO) {
+            val analyses = database.recentAnalysisDao().getAll()
+            analyses.forEach { analysis ->
+                withContext(Dispatchers.Main) {
+                    addAnalysisToView(analysis)
+                }
+            }
+        }
+    }
+
+    private fun addAnalysisToView(analysis: RecentAnalysis) {
+        val itemView = LayoutInflater.from(this).inflate(R.layout.item_recent_analysis, recentContainer, false)
+
+        val bitmap = loadImageFromStorage(analysis.imagePath)
+        if (bitmap != null) {
+            itemView.findViewById<ImageView>(R.id.ivPlant).setImageBitmap(bitmap)
+        }
+
+        itemView.findViewById<TextView>(R.id.tvScientificName).text = analysis.scientificName
+        itemView.findViewById<TextView>(R.id.tvCommonName).text = analysis.commonName ?: "Nom commun inconnu"
+        itemView.findViewById<TextView>(R.id.tvScoreValue).text = "%.2f".format(analysis.score)
+
+        recentContainer.addView(itemView, 0)
     }
 
     // Et la méthode complémentaire pour charger l'image
