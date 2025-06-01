@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+
+        <!-- Section Identification des plantes -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Identification avancée"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Noms scientifiques"
+                android:textSize="16sp"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_scientific_names"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:trackTint="@color/switch_track"
+                app:thumbTint="@color/switch_thumb"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Précision maximale"
+                android:textSize="16sp"
+                android:lineSpacingExtra="4sp"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_high_accuracy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:trackTint="@color/switch_track"
+                app:thumbTint="@color/switch_thumb"/>
+        </LinearLayout>
+
+        <!-- Section Base de données -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sources de données"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Source principale:"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp"/>
+
+        <Spinner
+            android:id="@+id/spinner_data_source"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/spinner_background"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Section Debug -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Options développeur"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btn_export_db"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Exporter les données"
+            android:backgroundTint="#F4C95D"
+            android:textColor="#000000"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btn_send_logs"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Envoyer les logs"
+            android:backgroundTint="#F4C95D"
+            android:textColor="#000000"/>
+
+    </LinearLayout>
+</ScrollView>

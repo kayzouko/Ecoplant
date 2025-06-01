@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#FAFAFA">
 
-    <!-- Header -->
+    <!--Header-->
     <LinearLayout
         android:id="@+id/header_rectangle"
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:textSize="20sp"/>
     </LinearLayout>
 
-    <!-- Titres sous le header -->
+    <!--Titres sous le header-->
     <TextView
         android:id="@+id/HistoriqueDanalyses"
         android:layout_width="wrap_content"
@@ -81,7 +81,7 @@
             android:orientation="vertical"/>
     </ScrollView>
 
-    <!-- footer -->
+    <!--footer-->
     <LinearLayout
         android:id="@+id/footer_rectangle"
         android:layout_width="match_parent"

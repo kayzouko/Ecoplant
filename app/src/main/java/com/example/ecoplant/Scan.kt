@@ -29,6 +29,14 @@ import androidx.core.content.FileProvider
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlinx.coroutines.withContext
+import com.google.android.gms.location.LocationServices
+import java.util.Calendar
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SwitchCompat
 
 class Scan : AppCompatActivity() {
 
@@ -45,6 +53,7 @@ class Scan : AppCompatActivity() {
     private lateinit var mapBtn: LinearLayout
     private lateinit var profilBtn: LinearLayout
     private lateinit var photoFile: File
+    private lateinit var clocheBtn : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +64,12 @@ class Scan : AppCompatActivity() {
         historiqueBtn = findViewById(R.id.historique_btn)
         mapBtn = findViewById(R.id.map_btn)
         profilBtn = findViewById(R.id.profil_btn)
+        clocheBtn = findViewById<TextView>(R.id.cloche_btn)
+
+        //la cloche pour les notifications
+        clocheBtn.setOnClickListener {
+            showNotificationSettings()
+        }
 
         //on récupère le parent LinearLayout du ScrollView
         val scroll = findViewById<ScrollView>(R.id.scrollView)
@@ -76,11 +91,6 @@ class Scan : AppCompatActivity() {
         //on insère notre conteneur vide après le titre
         val titleIndex = content.indexOfChild(titleRecents)
         content.addView(recentContainer, titleIndex + 1)
-
-//        //chargement des analyses sauvegardées
-//        lifecycleScope.launch {
-//            loadSavedAnalyses()
-//        }
 
         //on observe les analyses récentes en direct
         database.recentAnalysisDao().getAllLive().observe(this) { analyses ->
@@ -121,13 +131,14 @@ class Scan : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-//        lifecycleScope.launch {
-//            //on supprime toutes les vues avant rechargement
-//            recentContainer.removeAllViews()
-//            loadSavedAnalyses()
-//        }
     }
 
+    /**
+     * Gère le résultat de la capture photo.
+     * @param requestCode Le code de la requête.
+     * @param resultCode Le code de résultat de l'activité.
+     * @param data Les données retournées par l'activité.
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
@@ -138,6 +149,10 @@ class Scan : AppCompatActivity() {
         }
     }
 
+    /**
+     * Envoie l'image à l'API PlantNet pour identification.
+     * @param bitmap L'image capturée par la caméra.
+     */
     private fun sendToPlantNet(bitmap: Bitmap) {
         lifecycleScope.launch {
             val file = File(cacheDir, "upload.jpg").apply {
@@ -179,6 +194,11 @@ class Scan : AppCompatActivity() {
         }
     }
 
+    /**
+     * Gère la réponse de l'API PlantNet.
+     * @param response La réponse HTTP de l'API.
+     * @param bitmap L'image capturée par la caméra.
+     */
     private suspend fun handleApiResponse(response: Response, bitmap: Bitmap) {
         if (!response.isSuccessful) {
             throw IOException("HTTP ${response.code} - ${response.message}")
@@ -206,12 +226,22 @@ class Scan : AppCompatActivity() {
         }
     }
 
+    /**
+     * Affiche un message d'erreur dans un Toast.
+     * @param message Le message d'erreur à afficher.
+     */
     private suspend fun showError(message: String) {
         withContext(Dispatchers.Main) {
             Toast.makeText(this@Scan, message, Toast.LENGTH_LONG).show()
         }
     }
 
+    /**
+     * Gère les résultats des demandes de permissions.
+     * @param requestCode Le code de la requête de permission.
+     * @param permissions Les permissions demandées.
+     * @param grantResults Les résultats de la demande de permission.
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -227,27 +257,17 @@ class Scan : AppCompatActivity() {
         }
     }
 
-    //fonction pour créer et ajouter dans Récentes Analyses
+    /**
+     * Ajoute une analyse récente à la base de données et à l'interface utilisateur.
+     * @param photo La photo de la plante.
+     * @param speciesName Le nom scientifique de l'espèce.
+     * @param commonName Le nom commun de l'espèce, ou null si inconnu.
+     * @param score Le score d'identification de l'espèce.
+     */
     private fun addRecentAnalysis(photo: Bitmap, speciesName: String, commonName: String?, score: Double) {
-//        // Création de la vue
-//        val itemView = LayoutInflater.from(this).inflate(R.layout.item_recent_analysis, recentContainer, false)
-//
-//        // Configuration des éléments
-//        val ivPlant = itemView.findViewById<ImageView>(R.id.ivPlant)
-//        val tvScientificName = itemView.findViewById<TextView>(R.id.tvScientificName)
-//        val tvCommonName = itemView.findViewById<TextView>(R.id.tvCommonName)
-//        val tvScoreValue = itemView.findViewById<TextView>(R.id.tvScoreValue)
 
         // Redimensionnement de la photo
         val thumbnail = Bitmap.createScaledBitmap(photo, 80.dp, 80.dp, true)
-//        ivPlant.setImageBitmap(thumbnail)
-//
-//        tvScientificName.text = speciesName
-//        tvCommonName.text = commonName ?: "Nom commun inconnu"
-//        tvScoreValue.text = "%.2f".format(score)
-//
-//        // Ajout en tête de liste
-//        recentContainer.addView(itemView, 0)
 
         // Sauvegarde en base de données
         saveAnalysisToDb(RecentAnalysis(
@@ -262,6 +282,11 @@ class Scan : AppCompatActivity() {
     private val Int.dp: Int get() =
         (this * resources.displayMetrics.density).toInt()
 
+    /**
+     * Sauvegarde une image Bitmap dans le stockage externe et retourne le chemin du fichier.
+     * @param bitmap L'image à sauvegarder.
+     * @return Le chemin du fichier image sauvegardé, ou une chaîne vide en cas d'erreur.
+     */
     private fun saveBitmapToStorage(bitmap: Bitmap): String {
         val storageDir = File(getExternalFilesDir(null), "plant_images")
         if (!storageDir.exists()) {
@@ -282,27 +307,27 @@ class Scan : AppCompatActivity() {
         }
     }
 
+    /**
+     * Accède à la base de données de l'application.
+     */
     private val database by lazy {
         (application as EcoPlantApplication).database
     }
 
+    /**
+     * Enregistre une analyse récente dans la base de données.
+     * @param analysis L'analyse à enregistrer.
+     */
     private fun saveAnalysisToDb(analysis: RecentAnalysis) {
         lifecycleScope.launch(Dispatchers.IO) {
             database.recentAnalysisDao().insert(analysis)
         }
     }
 
-//    private suspend fun loadSavedAnalyses() {
-//        withContext(Dispatchers.IO) {
-//            val analyses = database.recentAnalysisDao().getAll()
-//            analyses.forEach { analysis ->
-//                withContext(Dispatchers.Main) {
-//                    addAnalysisToView(analysis)
-//                }
-//            }
-//        }
-//    }
-
+    /**
+     * Ajoute une vue d'analyse récente à l'interface utilisateur.
+     * @param analysis L'analyse récente à afficher.
+     */
     private fun addAnalysisToView(analysis: RecentAnalysis) {
         val itemView = LayoutInflater.from(this).inflate(R.layout.item_recent_analysis, recentContainer, false)
 
@@ -318,7 +343,7 @@ class Scan : AppCompatActivity() {
         recentContainer.addView(itemView, 0)
     }
 
-    // Et la méthode complémentaire pour charger l'image
+    //méthode complémentaire pour charger l'image
     private fun loadImageFromStorage(path: String): Bitmap? {
         return try {
             BitmapFactory.decodeFile(path)
@@ -326,5 +351,76 @@ class Scan : AppCompatActivity() {
             e.printStackTrace()
             null
         }
+    }
+
+    /**
+     * Affiche une boîte de dialogue pour gérer les paramètres de notification.
+     */
+    private fun showNotificationSettings() {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Gestion des notifications")
+            .setView(R.layout.dialog_notifications)
+            .setPositiveButton("Enregistrer", null)
+            .setNegativeButton("Annuler", null)
+            .create()
+
+        dialog.setOnShowListener {
+            val switchTips = dialog.findViewById<SwitchCompat>(R.id.switch_tips)
+            val switchReminders = dialog.findViewById<SwitchCompat>(R.id.switch_reminders)
+            val frequencySpinner = dialog.findViewById<Spinner>(R.id.frequency_spinner)
+            val timePicker = dialog.findViewById<TimePicker>(R.id.time_picker)
+
+            //charger les préférences existantes
+            val prefs = getSharedPreferences("notif_prefs", MODE_PRIVATE)
+            switchTips?.isChecked = prefs.getBoolean("plant_tips", true)
+            switchReminders?.isChecked = prefs.getBoolean("water_reminders", true)
+
+            //bouton Enregistrer
+            val saveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            saveButton.setOnClickListener {
+                with(prefs.edit()) {
+                    putBoolean("plant_tips", switchTips?.isChecked ?: true)
+                    putBoolean("water_reminders", switchReminders?.isChecked ?: true)
+                    apply()
+                }
+
+                //planifier les notifications
+                if (switchReminders?.isChecked == true) {
+                    waterReminders(timePicker?.hour ?: 9, timePicker?.minute ?: 0)
+                }
+
+                Toast.makeText(this, "Préférences enregistrées", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }
+        }
+
+        dialog.show()
+    }
+
+    /**
+     * Planifie les rappels d'arrosage des plantes à une heure spécifique.
+     * @param hour L'heure à laquelle le rappel doit être déclenché.
+     * @param minute La minute à laquelle le rappel doit être déclenché.
+     */
+    private fun waterReminders(hour: Int, minute: Int) {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, WaterReminderReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        //pour définir l'heure de l'alarme
+        val calendar = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
+        }
+        //si l'heure est passée, le déclencher le lendemain
+        if (calendar.timeInMillis < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+        }
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
     }
 }

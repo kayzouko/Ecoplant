@@ -5,4 +5,10 @@
         <item>Mensuel</item>
         <item>Personnalisé</item>
     </string-array>
+    <string-array name="data_sources">
+        <item>PlantNet (par défaut)</item>
+        <item>GBIF - Global Biodiversity</item>
+        <item>iNaturalist</item>
+        <item>Base locale</item>
+    </string-array>
 </resources>

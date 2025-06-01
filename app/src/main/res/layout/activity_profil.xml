@@ -46,7 +46,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/r6he4x8qd6a5"
+                android:id="@+id/photo_de_profil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/cr50bf0f0f0"
@@ -58,10 +58,10 @@
                 android:focusable="true"
                 android:orientation="vertical">
                 <ImageView
-                    android:id="@+id/r09kxa628lfnh"
+                    android:id="@+id/pdp"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@mipmap/ic_launcher"
+                    android:src="@drawable/utilisateur"
                     android:scaleType="fitXY" />
             </LinearLayout>
             <TextView
@@ -202,7 +202,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginEnd="23dp"
-                            android:src="@mipmap/ic_launcher"
+                            android:src="@drawable/infos_perso_icon"
                             android:scaleType="fitXY"
                             />
                         <TextView
@@ -236,7 +236,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginEnd="23dp"
-                            android:src="@mipmap/ic_launcher"
+                            android:src="@drawable/cloche_icon"
                             android:scaleType="fitXY"
                             />
                         <TextView
@@ -258,7 +258,7 @@
                         android:orientation="vertical">
                     </LinearLayout>
                     <LinearLayout
-                        android:id="@+id/ra812nyn89j7"
+                        android:id="@+id/parametres_app"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -270,7 +270,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginEnd="23dp"
-                            android:src="@mipmap/ic_launcher"
+                            android:src="@drawable/parametres_icon"
                             android:scaleType="fitXY"
                             />
                         <TextView
@@ -305,7 +305,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginEnd="23dp"
-                            android:src="@mipmap/ic_launcher"
+                            android:src="@drawable/aide_et_support_icon"
                             android:scaleType="fitXY"
                             />
                         <TextView
@@ -338,7 +338,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:layout_marginEnd="23dp"
-                            android:src="@mipmap/ic_launcher"
+                            android:src="@drawable/se_deconnecter"
                             android:scaleType="fitXY"
                             />
                         <TextView

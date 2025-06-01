@@ -65,7 +65,7 @@ class CreerUnCompte : AppCompatActivity() {
         //Firebase Authentication
         auth = FirebaseAuth.getInstance()
         FirebaseAuth.getInstance().setLanguageCode("fr")
-        // Configuration de la connexion Google
+        //configuration de la connexion Google
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()

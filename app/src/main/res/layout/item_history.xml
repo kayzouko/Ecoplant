@@ -12,7 +12,7 @@
     android:elevation="4dp"
     android:orientation="vertical">
 
-    <!-- Ligne 1 : Photo + Noms + Date -->
+    <!--Photo+Noms+Date-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:layout_marginEnd="10dp"
         android:orientation="horizontal">
 
-        <!-- Image de la plante -->
+        <!--Image de la plante-->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivPlant"
             android:layout_width="80dp"
@@ -31,7 +31,7 @@
             app:shapeAppearanceOverlay="@style/RoundedImageView"/>
 
 
-        <!-- Noms scientifiques/communs -->
+        <!--Noms scientifiques/communs-->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
                 android:textSize="14sp"/>
         </LinearLayout>
 
-        <!-- Date -->
+        <!--Date-->
         <TextView
             android:id="@+id/tvTimestamp"
             android:layout_width="wrap_content"
@@ -66,7 +66,7 @@
             android:layout_marginTop="3dp"/>
     </LinearLayout>
 
-    <!-- Score -->
+    <!--Score-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Notes (zone modifiable) -->
+    <!--Notes (modifiable)-->
     <LinearLayout
         android:id="@+id/note_container"
         android:layout_width="match_parent"
@@ -130,7 +130,7 @@
             android:focusable="true" />
     </LinearLayout>
 
-    <!-- affichage graphique pour les services écosystémiques -->
+    <!--affichage graphique pour les services écosystémiques-->
     <LinearLayout
         android:id="@+id/circles_container"
         android:layout_width="match_parent"
@@ -198,7 +198,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Actions -->
+    <!--Actions-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

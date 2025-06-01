@@ -7,12 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="switch_thumb_enabled">#00A67E</color> <!-- Vert EcoPlant quand activé -->
-    <color name="switch_thumb_disabled">#F5F5F5</color> <!-- Gris clair quand désactivé -->
-    <color name="switch_track_enabled">#80D4C8</color> <!-- Vert pâle pour piste activée -->
-    <color name="switch_track_disabled">#E0E0E0</color> <!-- Gris pour piste désactivée -->
+    <color name="switch_thumb_enabled">#00A67E</color>
+    <color name="switch_thumb_disabled">#F5F5F5</color>
+    <color name="switch_track_enabled">#80D4C8</color>
+    <color name="switch_track_disabled">#E0E0E0</color>
 
-    <!-- Références pour les selectors -->
     <color name="switch_thumb">@color/switch_thumb_selector</color>
     <color name="switch_track">@color/switch_track_selector</color>
 </resources>
