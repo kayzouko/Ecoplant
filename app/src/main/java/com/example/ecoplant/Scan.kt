@@ -37,11 +37,15 @@ import android.app.PendingIntent
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SwitchCompat
+import android.location.Location
+import android.location.LocationManager
+import android.util.Log
 
 class Scan : AppCompatActivity() {
 
     companion object {
         private const val CAMERA_REQUEST = 1001
+        private const val LOCATION_PERMISSION_REQUEST = 456
         private const val PROJECT = "all"
         private const val API_KEY = "2b10EUr53rAFRsd5tUinlcPO"
         private const val API_URL = "https://my-api.plantnet.org/v2/identify/$PROJECT?api-key=$API_KEY&lang=fr"
@@ -125,7 +129,7 @@ class Scan : AppCompatActivity() {
 
         //footer navigation
         historiqueBtn.setOnClickListener { startActivity(Intent(this, Historique::class.java)) }
-        //mapBtn.setOnClickListener       { startActivity(Intent(this, Map::class.java)) }
+        mapBtn.setOnClickListener       { startActivity(Intent(this, MapActivity::class.java)) }
         profilBtn.setOnClickListener    { startActivity(Intent(this, Profil::class.java)) }
     }
 
@@ -269,13 +273,48 @@ class Scan : AppCompatActivity() {
         // Redimensionnement de la photo
         val thumbnail = Bitmap.createScaledBitmap(photo, 80.dp, 80.dp, true)
 
+        val location = getLastKnownLocation()
+        if (location == null) {
+            Toast.makeText(this, "Localisation non disponible", Toast.LENGTH_SHORT).show()
+        }
+        Log.d("ScanDebug", "Location: ${location?.latitude}, ${location?.longitude}")
+
         // Sauvegarde en base de données
         saveAnalysisToDb(RecentAnalysis(
             scientificName = speciesName,
             commonName = commonName,
             score = score,
-            imagePath = saveBitmapToStorage(thumbnail)
+            imagePath = saveBitmapToStorage(thumbnail),
+            latitude = location?.latitude,
+            longitude = location?.longitude
         ))
+    }
+
+    /**
+     * Obtient la dernière localisation connue de l'utilisateur.
+     * @return La dernière localisation connue, ou null si non disponible.
+     */
+    private fun getLastKnownLocation(): Location? {
+        return try {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    LOCATION_PERMISSION_REQUEST
+                )
+                return null
+            }
+            val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                ?: locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        } catch (e: Exception) {
+            Log.e("Location", "Error getting location", e)
+            null
+        }
     }
 
     //extension pour convertir dp en px

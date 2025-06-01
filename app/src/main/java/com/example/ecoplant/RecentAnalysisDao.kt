@@ -25,4 +25,7 @@ interface RecentAnalysisDao {
 
     @Query("SELECT COUNT(DISTINCT scientific_name) FROM recent_analyses")
     suspend fun getDistinctSpeciesCount(): Int
+
+    @Query("SELECT * FROM recent_analyses WHERE latitude IS NOT NULL AND longitude IS NOT NULL")
+    suspend fun getAllWithLocation(): List<RecentAnalysis>
 }

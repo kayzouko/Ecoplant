@@ -29,8 +29,6 @@ class CreerUnCompte : AppCompatActivity() {
     private lateinit var checkboxError: TextView
     private lateinit var creerCompteBtn: LinearLayout
     private lateinit var googleBtn: LinearLayout
-    private lateinit var appleBtn: LinearLayout
-    private lateinit var facebookBtn: LinearLayout
     private lateinit var connectezVousBtn: TextView
 
     private lateinit var auth: FirebaseAuth
@@ -57,8 +55,6 @@ class CreerUnCompte : AppCompatActivity() {
         checkboxError = findViewById(R.id.checkboxError)
         creerCompteBtn = findViewById(R.id.creez_le_compte_btn)
         googleBtn = findViewById(R.id.google_btn)
-        appleBtn = findViewById(R.id.apple_btn)
-        facebookBtn = findViewById(R.id.facebook_btn)
         connectezVousBtn = findViewById(R.id.connectez_vous_btn)
         retourBtn = findViewById(R.id.retourBtn)
 
@@ -73,7 +69,7 @@ class CreerUnCompte : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         //bouton retour
-        retourBtn.setOnClickListener {finish()}
+        retourBtn.setOnClickListener {startActivity(Intent(this, MainActivity::class.java))}
 
         //mot de passe visible ou pas
         var isMotDePasseVisible = false
@@ -172,16 +168,6 @@ class CreerUnCompte : AppCompatActivity() {
         googleBtn.setOnClickListener {
             handleClickIfChecked {
                 signInWithGoogle()
-            }
-        }
-        appleBtn.setOnClickListener {
-            handleClickIfChecked {
-                Toast.makeText(this, "Connexion Apple non implémentée", Toast.LENGTH_SHORT).show()
-            }
-        }
-        facebookBtn.setOnClickListener {
-            handleClickIfChecked {
-                Toast.makeText(this, "Connexion Facebook non implémentée", Toast.LENGTH_SHORT).show()
             }
         }
 

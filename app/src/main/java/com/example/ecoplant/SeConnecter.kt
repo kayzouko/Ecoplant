@@ -26,8 +26,6 @@ class SeConnecter : AppCompatActivity() {
     private lateinit var loginButton: LinearLayout
     private lateinit var btnRetour: ImageView
     private lateinit var googleBtn: LinearLayout
-    private lateinit var appleBtn: LinearLayout
-    private lateinit var facebookBtn: LinearLayout
     private lateinit var creezUnCompteBtn: TextView
 
     //clés SharedPreferences
@@ -54,8 +52,6 @@ class SeConnecter : AppCompatActivity() {
         loginButton = findViewById(R.id.se_connecter_btn2)
         btnRetour = findViewById<ImageView>(R.id.BtnRetour)
         googleBtn = findViewById(R.id.google_btn)
-        appleBtn = findViewById(R.id.apple_btn)
-        facebookBtn = findViewById(R.id.facebook_btn)
         creezUnCompteBtn = findViewById(R.id.creer_un_compte_btn)
 
         auth = FirebaseAuth.getInstance()
@@ -68,7 +64,7 @@ class SeConnecter : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         //bouton retour
-        btnRetour.setOnClickListener {finish()}
+        btnRetour.setOnClickListener {startActivity(Intent(this, MainActivity::class.java))}
 
         //mot de passe visible ou pas
         var isPasswordVisible = false
@@ -188,12 +184,6 @@ class SeConnecter : AppCompatActivity() {
 
         googleBtn.setOnClickListener {
             signInWithGoogle()
-        }
-        appleBtn.setOnClickListener {
-                Toast.makeText(this, "Connexion Apple non implémentée", Toast.LENGTH_SHORT).show()
-        }
-        facebookBtn.setOnClickListener {
-                Toast.makeText(this, "Connexion Facebook non implémentée", Toast.LENGTH_SHORT).show()
         }
 
         //vers l'écran de création de compte

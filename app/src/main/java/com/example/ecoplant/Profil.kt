@@ -132,6 +132,11 @@ class Profil : AppCompatActivity() {
         profilBtn.setOnClickListener {
             //déjà sur le profil
         }
+
+        mapBtn.setOnClickListener {
+            startActivity(Intent(this, MapActivity::class.java))
+            finish()
+        }
     }
 
     /**
@@ -161,7 +166,7 @@ class Profil : AppCompatActivity() {
             val distinctSpecies = analyses.map { it.scientificName }.distinct().size
 
             //nombre d'endroits (placeholder pour l'instant)
-            val locationsCount = 0
+            val locationsCount = analyses.count { it.latitude != null && it.longitude != null }
 
             withContext(Dispatchers.Main) {
                 plantesCount.text = totalPlants.toString()

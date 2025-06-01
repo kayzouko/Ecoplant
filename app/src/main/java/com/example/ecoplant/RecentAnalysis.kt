@@ -23,5 +23,11 @@ data class RecentAnalysis(
     val timestamp: Long = System.currentTimeMillis(),
 
     @ColumnInfo(name = "notes")
-    var notes: String = ""
+    var notes: String = "",
+
+    @ColumnInfo(name = "latitude")
+    val latitude: Double? = null,
+
+    @ColumnInfo(name = "longitude")
+    val longitude: Double? = null
 )

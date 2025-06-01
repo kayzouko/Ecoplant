@@ -41,6 +41,7 @@ class Historique : AppCompatActivity() {
     private lateinit var scanBtn : LinearLayout
     private lateinit var btnSaveNotes : TextView
     private lateinit var profilBtn : LinearLayout
+    private lateinit var map_btn : LinearLayout
     private lateinit var clocheBtn : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +50,7 @@ class Historique : AppCompatActivity() {
         container = findViewById(R.id.historique_container)
         scanBtn = findViewById(R.id.scan_btn)
         profilBtn = findViewById(R.id.profil_btn)
+        map_btn = findViewById(R.id.map_btn)
         clocheBtn = findViewById<TextView>(R.id.cloche_btn)
 
         //la cloche pour les notifications
@@ -61,6 +63,7 @@ class Historique : AppCompatActivity() {
 
         scanBtn.setOnClickListener { startActivity(Intent(this, Scan::class.java)) }
         profilBtn.setOnClickListener { startActivity(Intent(this, Profil::class.java)) }
+        map_btn.setOnClickListener { startActivity(Intent(this, MapActivity::class.java)) }
     }
 
     /**

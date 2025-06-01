@@ -230,70 +230,29 @@
                 android:text="Ou continuez avec"
                 />
             <LinearLayout
-                android:id="@+id/rhh2boeabftr"
+                android:id="@+id/rlo4n51hcwp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:layout_marginBottom="21dp"
+                android:layout_marginBottom="14dp"
                 android:orientation="vertical">
                 <LinearLayout
-                    android:id="@+id/r8p8efpk5zap"
+                    android:id="@+id/google_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <LinearLayout
-                        android:id="@+id/google_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/cercle_blanc_connexion"
-                        android:padding="14dp"
-                        android:layout_marginEnd="35dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:id="@+id/rr4r0zo129p"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/google_logo"
-                            android:scaleType="fitXY"
-                            />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/apple_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/cercle_blanc_connexion"
-                        android:padding="14dp"
-                        android:layout_marginEnd="35dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:id="@+id/rrmpney3cxa"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/apple_logo"
-                            android:scaleType="fitXY"
-                            />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/facebook_btn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/cercle_blanc_connexion"
-                        android:padding="14dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:id="@+id/r1mgwvmswmhh"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/facebook_logo"
-                            android:scaleType="fitXY"
-                            />
-                    </LinearLayout>
+                    android:background="@drawable/cercle_blanc_connexion"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="14dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/google_logo"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/google_logo"
+                        android:scaleType="fitXY"
+                        />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout

@@ -19,8 +19,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var seConnecterBtn: LinearLayout
     private lateinit var creerUnCompteBtn: LinearLayout
     private lateinit var googleBtn: LinearLayout
-    private lateinit var appleBtn: LinearLayout
-    private lateinit var facebookBtn: LinearLayout
     private val PREFS_NAME = "login_prefs"
     private val KEY_REMEMBER = "remember_me"
     private lateinit var auth: FirebaseAuth
@@ -36,8 +34,6 @@ class MainActivity : AppCompatActivity() {
         seConnecterBtn = findViewById(R.id.se_connecter_btn)
         creerUnCompteBtn = findViewById(R.id.creer_un_compte_btn)
         googleBtn = findViewById(R.id.google_btn)
-        appleBtn = findViewById(R.id.apple_btn)
-        facebookBtn = findViewById(R.id.facebook_btn)
         auth = FirebaseAuth.getInstance()
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -56,12 +52,6 @@ class MainActivity : AppCompatActivity() {
 
         googleBtn.setOnClickListener {
             signInWithGoogle()
-        }
-        appleBtn.setOnClickListener {
-            Toast.makeText(this, "Connexion Apple non implémentée", Toast.LENGTH_SHORT).show()
-        }
-        facebookBtn.setOnClickListener {
-            Toast.makeText(this, "Connexion Facebook non implémentée", Toast.LENGTH_SHORT).show()
         }
     }
 
