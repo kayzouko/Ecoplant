@@ -12,7 +12,20 @@
           "package_name": "com.example.ecoplant"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "320906238084-counsbh806i501qnf3221q1cpbduf2vi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ecoplant",
+            "certificate_hash": "d1c8895e994cd5e88fcf3b381944c559d4f2f961"
+          }
+        },
+        {
+          "client_id": "320906238084-226qrg9t52df4mhmqp956t1jq78ui3ht.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDu3nGFuk-X3bzZ_XWD7r-PeGfCLonC7vM"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320906238084-226qrg9t52df4mhmqp956t1jq78ui3ht.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

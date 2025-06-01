@@ -8,6 +8,11 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.GoogleAuthProvider
 
 class CreerUnCompte : AppCompatActivity() {
 
@@ -29,6 +34,11 @@ class CreerUnCompte : AppCompatActivity() {
     private lateinit var connectezVousBtn: TextView
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private companion object {
+        private const val RC_SIGN_IN = 9001
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +65,12 @@ class CreerUnCompte : AppCompatActivity() {
         //Firebase Authentication
         auth = FirebaseAuth.getInstance()
         FirebaseAuth.getInstance().setLanguageCode("fr")
+        // Configuration de la connexion Google
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         //bouton retour
         retourBtn.setOnClickListener {finish()}
@@ -155,7 +171,7 @@ class CreerUnCompte : AppCompatActivity() {
 
         googleBtn.setOnClickListener {
             handleClickIfChecked {
-                Toast.makeText(this, "Connexion Google non implémentée", Toast.LENGTH_SHORT).show()
+                signInWithGoogle()
             }
         }
         appleBtn.setOnClickListener {
@@ -173,5 +189,41 @@ class CreerUnCompte : AppCompatActivity() {
         connectezVousBtn.setOnClickListener {
             startActivity(Intent(this, SeConnecter::class.java))
         }
+    }
+
+    //connexion avec Google
+    fun signInWithGoogle() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    //traitement du résultat de la connexion Google
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                Toast.makeText(this, "Échec de la connexion Google : ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    //authentification Firebase avec le compte Google
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Connexion réussie avec Google", Toast.LENGTH_LONG).show()
+                    //passe à l'activité d'accueil (scan)
+                    startActivity(Intent(this, Scan::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "Échec de la connexion : ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                }
+            }
     }
 }

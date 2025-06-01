@@ -77,9 +77,17 @@ class Scan : AppCompatActivity() {
         val titleIndex = content.indexOfChild(titleRecents)
         content.addView(recentContainer, titleIndex + 1)
 
-        //chargement des analyses sauvegardées
-        lifecycleScope.launch {
-            loadSavedAnalyses()
+//        //chargement des analyses sauvegardées
+//        lifecycleScope.launch {
+//            loadSavedAnalyses()
+//        }
+
+        //on observe les analyses récentes en direct
+        database.recentAnalysisDao().getAllLive().observe(this) { analyses ->
+            recentContainer.removeAllViews()
+            analyses.forEach { analysis ->
+                addAnalysisToView(analysis)
+            }
         }
 
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
@@ -108,7 +116,16 @@ class Scan : AppCompatActivity() {
         //footer navigation
         historiqueBtn.setOnClickListener { startActivity(Intent(this, Historique::class.java)) }
         //mapBtn.setOnClickListener       { startActivity(Intent(this, Map::class.java)) }
-        //profilBtn.setOnClickListener    { startActivity(Intent(this, Profil::class.java)) }
+        profilBtn.setOnClickListener    { startActivity(Intent(this, Profil::class.java)) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+//        lifecycleScope.launch {
+//            //on supprime toutes les vues avant rechargement
+//            recentContainer.removeAllViews()
+//            loadSavedAnalyses()
+//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -212,32 +229,32 @@ class Scan : AppCompatActivity() {
 
     //fonction pour créer et ajouter dans Récentes Analyses
     private fun addRecentAnalysis(photo: Bitmap, speciesName: String, commonName: String?, score: Double) {
-        // Création de la vue
-        val itemView = LayoutInflater.from(this).inflate(R.layout.item_recent_analysis, recentContainer, false)
-
-        // Configuration des éléments
-        val ivPlant = itemView.findViewById<ImageView>(R.id.ivPlant)
-        val tvScientificName = itemView.findViewById<TextView>(R.id.tvScientificName)
-        val tvCommonName = itemView.findViewById<TextView>(R.id.tvCommonName)
-        val tvScoreValue = itemView.findViewById<TextView>(R.id.tvScoreValue)
+//        // Création de la vue
+//        val itemView = LayoutInflater.from(this).inflate(R.layout.item_recent_analysis, recentContainer, false)
+//
+//        // Configuration des éléments
+//        val ivPlant = itemView.findViewById<ImageView>(R.id.ivPlant)
+//        val tvScientificName = itemView.findViewById<TextView>(R.id.tvScientificName)
+//        val tvCommonName = itemView.findViewById<TextView>(R.id.tvCommonName)
+//        val tvScoreValue = itemView.findViewById<TextView>(R.id.tvScoreValue)
 
         // Redimensionnement de la photo
         val thumbnail = Bitmap.createScaledBitmap(photo, 80.dp, 80.dp, true)
-        ivPlant.setImageBitmap(thumbnail)
-
-        tvScientificName.text = speciesName
-        tvCommonName.text = commonName ?: "Nom commun inconnu"
-        tvScoreValue.text = "%.2f".format(score)
-
-        // Ajout en tête de liste
-        recentContainer.addView(itemView, 0)
+//        ivPlant.setImageBitmap(thumbnail)
+//
+//        tvScientificName.text = speciesName
+//        tvCommonName.text = commonName ?: "Nom commun inconnu"
+//        tvScoreValue.text = "%.2f".format(score)
+//
+//        // Ajout en tête de liste
+//        recentContainer.addView(itemView, 0)
 
         // Sauvegarde en base de données
         saveAnalysisToDb(RecentAnalysis(
             scientificName = speciesName,
             commonName = commonName,
             score = score,
-            imagePath = saveBitmapToStorage(thumbnail) // Implémentez cette méthode
+            imagePath = saveBitmapToStorage(thumbnail)
         ))
     }
 
@@ -275,16 +292,16 @@ class Scan : AppCompatActivity() {
         }
     }
 
-    private suspend fun loadSavedAnalyses() {
-        withContext(Dispatchers.IO) {
-            val analyses = database.recentAnalysisDao().getAll()
-            analyses.forEach { analysis ->
-                withContext(Dispatchers.Main) {
-                    addAnalysisToView(analysis)
-                }
-            }
-        }
-    }
+//    private suspend fun loadSavedAnalyses() {
+//        withContext(Dispatchers.IO) {
+//            val analyses = database.recentAnalysisDao().getAll()
+//            analyses.forEach { analysis ->
+//                withContext(Dispatchers.Main) {
+//                    addAnalysisToView(analysis)
+//                }
+//            }
+//        }
+//    }
 
     private fun addAnalysisToView(analysis: RecentAnalysis) {
         val itemView = LayoutInflater.from(this).inflate(R.layout.item_recent_analysis, recentContainer, false)

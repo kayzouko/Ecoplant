@@ -1,0 +1,8 @@
+<resources>
+    <string-array name="notification_frequencies">
+        <item>Quotidien</item>
+        <item>Hebdomadaire</item>
+        <item>Mensuel</item>
+        <item>Personnalisé</item>
+    </string-array>
+</resources>

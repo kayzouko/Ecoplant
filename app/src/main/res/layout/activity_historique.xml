@@ -1,6 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FAFAFA">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/header_rectangle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#F4C95D"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="18dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/Ecoplant_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="EcoPlant"
+            android:textColor="#000000"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/cloche_btn"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="🔔"
+            android:textColor="#000000"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <!-- Titres sous le header -->
+    <TextView
+        android:id="@+id/HistoriqueDanalyses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header_rectangle"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="16dp"
+        android:text="Historique d’analyses"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/dossiersIdentification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/HistoriqueDanalyses"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="5dp"
+        android:text="Vos dossiers d'identification des plantes"
+        android:textColor="#666666"
+        android:textSize="16sp"/>
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/dossiersIdentification"
+        android:layout_marginTop="7dp"
+        android:background="#666666"/>
+
+    <!--scrollable-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/footer_rectangle"
+        android:layout_below="@id/separator"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:id="@+id/historique_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
+
+    <!-- footer -->
+    <LinearLayout
+        android:id="@+id/footer_rectangle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#F5F5DC"
+        android:paddingTop="28dp"
+        android:paddingBottom="8dp"
+        android:paddingHorizontal="46dp"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/scan_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/cameraEmoji"
+                android:textColor="#666666"
+                android:textSize="24sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="📸"/>
+            <TextView
+                android:id="@+id/scanText"
+                android:textColor="#666666"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Scan"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/historique_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/horlogeEmoji"
+                android:textColor="#00A67E"
+                android:textSize="24sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="🕒"/>
+            <TextView
+                android:id="@+id/historiqueText"
+                android:textColor="#00A67E"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Historique"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/map_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/mapEmoji"
+                android:textColor="#666666"
+                android:textSize="24sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="🗺️"/>
+            <TextView
+                android:id="@+id/mapText"
+                android:textColor="#666666"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Map"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/profil_btn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/profilEmoji"
+                android:textColor="#666666"
+                android:textSize="24sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="👤"/>
+            <TextView
+                android:id="@+id/profilText"
+                android:textColor="#666666"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Profil"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

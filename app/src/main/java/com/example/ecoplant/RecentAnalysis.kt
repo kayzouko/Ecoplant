@@ -20,5 +20,8 @@ data class RecentAnalysis(
     @ColumnInfo(name = "image_path")
     val imagePath: String,
 
-    val timestamp: Long = System.currentTimeMillis()
+    val timestamp: Long = System.currentTimeMillis(),
+
+    @ColumnInfo(name = "notes")
+    var notes: String = ""
 )
